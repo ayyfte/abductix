@@ -24,7 +24,10 @@ int playerMapX, playerMapY, playerX, playerY;
 vector<vector<int>> box, boxMap;
 vector<vector<int>> placeholder, placeholderMap;
 int attachedBoxIndex = -1;
+int SCENE = 0;
 bool nextLevel = false;
+bool playerGoingDown = true;
+int sceneZeroYScroll = 0;
 
 Image imageCornerTopLeft, imageCornerTopRight, imageCornerBottomLeft, imageCornerBottomRight, imageWallUp, imageWallDown, imageWallLeft, imageWallRight, imagePlayer, imagePurpleBox, imagePurplePlaceholder, imageGreenBox, imageGreenPlaceholder, imageBlueBox, imageBluePlaceholder, imageRedBox, imageRedPlaceholder;
 Texture2D textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder;
@@ -138,10 +141,7 @@ void InitLevel() {
             tileMap[i][j] = allLevelMap[to_string(level)]["tilemap"][i][j].get<int>();
         }
     }
-
-    screenWidth = GetScreenWidth();
-    screenHeight = GetScreenHeight();
-
+    
     if (screenHeight>screenWidth) {
         tileSize = screenWidth / (levelWidth + 2);
     } else {
@@ -191,10 +191,11 @@ int main(void) {
     InitWindow(320, 640, "abductix");
     emscripten_set_main_loop(gameLoop, 30, 1);
     #else
-    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
-    ToggleFullscreen();
+    InitWindow(320, 640, "abductix");
+    //InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
+    //ToggleFullscreen();
     SetTargetFPS(30);
-    InitLevel();
+    //InitLevel();
     
     while (!WindowShouldClose()) gameLoop();
     #endif
@@ -211,8 +212,10 @@ int main(void) {
     return 0;
 }
 
-bool playerGoingDown = true;
 void update() {
+    screenWidth = GetScreenWidth();
+    screenHeight = GetScreenHeight();
+    if (SCENE==1) {
     FRAME+=1;
     playerY += (playerGoingDown) ? +tileSize/60:-tileSize/60;
     if (playerY>=offsetY+playerMapY*tileSize+tileSize/12) playerGoingDown=false;
@@ -258,10 +261,26 @@ void update() {
         boxMap[indexToLift][1] = playerMapY+1;
     }
     if (satisfiedPlaceholders==placeholderMap.size()) nextLevel = true;
+    }
 }
-
 void draw() {
     ClearBackground(ColorFromHSV(302, .54, .52));
+    if (SCENE==0) {
+        DrawText("abductix",screenWidth/2-MeasureText("abductix",screenWidth/5)/2,sceneZeroYScroll+screenHeight/4,screenWidth/5,WHITE);
+        for (int i = 0; i < maxLevel; i++) {
+            int width = screenWidth/4;
+            int x = (i % 3) * width + (width/4)*(i%3);
+            int y = (i / 3) * width + (width/4)*(i/3);
+            DrawRectangle(width/4+x, sceneZeroYScroll+screenHeight/2+width/4+y, width, width, WHITE);
+        }
+
+        DrawRectangleGradientV(0, sceneZeroYScroll+screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
+        DrawTriangle((Vector2){screenWidth / 2, rectY + 60}, 
+                     (Vector2){screenWidth / 2 - 10, rectY + 80}, 
+                     (Vector2){screenWidth / 2 + 10, rectY + 80}, 
+                     BLACK);
+    }
+    else if (SCENE==1) {
     for (nlohmann::json::size_type rowIndex = 0; rowIndex < tileMap.size(); ++rowIndex) {
         const auto& row = tileMap[rowIndex];
         for (nlohmann::json::size_type tileIndex = 0; tileIndex < row.size(); ++tileIndex) {
@@ -299,5 +318,6 @@ void draw() {
             case 2: DrawTexture(textureBlueBox, box[i][0], box[i][1], WHITE); break;
             case 3: DrawTexture(textureRedBox, box[i][0], box[i][1], WHITE); break;
         }
+    }
     }
 }
