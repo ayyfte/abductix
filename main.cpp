@@ -266,19 +266,14 @@ void update() {
 void draw() {
     ClearBackground(ColorFromHSV(302, .54, .52));
     if (SCENE==0) {
+        int width = screenWidth/4;
         DrawText("abductix",screenWidth/2-MeasureText("abductix",screenWidth/5)/2,sceneZeroYScroll+screenHeight/4,screenWidth/5,WHITE);
         for (int i = 0; i < maxLevel; i++) {
-            int width = screenWidth/4;
             int x = (i % 3) * width + (width/4)*(i%3);
             int y = (i / 3) * width + (width/4)*(i/3);
             DrawRectangle(width/4+x, sceneZeroYScroll+screenHeight/2+width/4+y, width, width, WHITE);
         }
-
-        DrawRectangleGradientV(0, sceneZeroYScroll+screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
-        DrawTriangle((Vector2){screenWidth / 2, rectY + 60}, 
-                     (Vector2){screenWidth / 2 - 10, rectY + 80}, 
-                     (Vector2){screenWidth / 2 + 10, rectY + 80}, 
-                     BLACK);
+        DrawRectangleGradientV(0, screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
     }
     else if (SCENE==1) {
     for (nlohmann::json::size_type rowIndex = 0; rowIndex < tileMap.size(); ++rowIndex) {
