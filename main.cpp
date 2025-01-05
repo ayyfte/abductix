@@ -28,6 +28,7 @@ int SCENE = 0;
 bool nextLevel = false;
 bool playerGoingDown = true;
 int sceneZeroYScroll = 0;
+Vector2 lastMousePosition = { 0.0f, 0.0f };
 
 Image imageCornerTopLeft, imageCornerTopRight, imageCornerBottomLeft, imageCornerBottomRight, imageWallUp, imageWallDown, imageWallLeft, imageWallRight, imagePlayer, imagePurpleBox, imagePurplePlaceholder, imageGreenBox, imageGreenPlaceholder, imageBlueBox, imageBluePlaceholder, imageRedBox, imageRedPlaceholder;
 Texture2D textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder;
@@ -215,6 +216,13 @@ int main(void) {
 void update() {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
+    if (SCENE==0) {
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += GetMousePosition().y - lastMousePosition.y;
+    if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
+    if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
+    if (abs(sceneZeroYScroll-(screenHeight/60))<screenHeight/60) sceneZeroYScroll=0;
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0) {level=0;InitLevel();SCENE=1;}
+    }
     if (SCENE==1) {
     FRAME+=1;
     playerY += (playerGoingDown) ? +tileSize/60:-tileSize/60;
@@ -262,6 +270,7 @@ void update() {
     }
     if (satisfiedPlaceholders==placeholderMap.size()) nextLevel = true;
     }
+    lastMousePosition = GetMousePosition();
 }
 void draw() {
     ClearBackground(ColorFromHSV(302, .54, .52));
