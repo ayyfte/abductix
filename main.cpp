@@ -15,6 +15,7 @@ const char* allLevelMapFile = LoadFileText("levels.json");
 const nlohmann::json allLevelMap = nlohmann::json::parse(allLevelMapFile);
 vector<vector<int>> tileMap;
 int level = 0;
+int changeSCN = 0;
 int satisfiedPlaceholders = 0;
 const int maxLevel = 10;
 int screenWidth, screenHeight, offsetX, offsetY, tileSize;
@@ -217,11 +218,12 @@ void update() {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
     if (SCENE==0) {
+    if (changeSCN==1) {level=0;InitLevel();SCENE=1;}
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += GetMousePosition().y - lastMousePosition.y;
     if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
     if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
     if (abs(sceneZeroYScroll-(screenHeight/60))<screenHeight/60) sceneZeroYScroll=0;
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0) {level=0;InitLevel();SCENE=1;}
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0) changeSCN = 1;
     }
     if (SCENE==1) {
     FRAME+=1;
@@ -282,7 +284,7 @@ void draw() {
             int y = (i / 3) * width + (width/4)*(i/3);
             DrawRectangle(width/4+x, sceneZeroYScroll+screenHeight/2+width/4+y, width, width, WHITE);
         }
-        DrawRectangleGradientV(0, screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
+        if (-sceneZeroYScroll<screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4-screenHeight/30) DrawRectangleGradientV(0, screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
     }
     else if (SCENE==1) {
     for (nlohmann::json::size_type rowIndex = 0; rowIndex < tileMap.size(); ++rowIndex) {
