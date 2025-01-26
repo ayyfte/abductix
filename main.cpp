@@ -218,11 +218,12 @@ void update() {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
     if (SCENE==0) {
+    if (changeSCN==1) {level=0;InitLevel();SCENE=1;}
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += GetMousePosition().y - lastMousePosition.y;
     if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
     if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
     if (abs(sceneZeroYScroll-(screenHeight/60))<screenHeight/60) sceneZeroYScroll=0;
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0 && !(-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) && !(sceneZeroYScroll>0)) {level=0;InitLevel();SCENE=1;}
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0 && !(-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) && !(sceneZeroYScroll>0)) changeSCN=1;
     }
     if (SCENE==1) {
     FRAME+=1;
@@ -281,8 +282,9 @@ void draw() {
         for (int i = 0; i < maxLevel; i++) {
             int x = (i % 3) * width + (width/4)*(i%3);
             int y = (i / 3) * width + (width/4)*(i/3);
-            DrawRectangle(width/4+x, sceneZeroYScroll+screenHeight/2+width/4+y, width, width, WHITE);
-            DrawText(to_string(i+1).c_str(),width/4+x+width/2-MeasureText(to_string(i+1).c_str(),width/2)/2,sceneZeroYScroll+screenHeight/2+width/4+y+width/4,width/2,ColorFromHSV(302, .54, .52));
+            Rectangle boxForLevel = {width/4+x, sceneZeroYScroll+screenHeight/2+width/4+y, width, width};
+            DrawRectangleLinesEx(boxForLevel, width/20, WHITE);
+            DrawText(to_string(i+1).c_str(),width/4+x+width/2-MeasureText(to_string(i+1).c_str(),width/2)/2,sceneZeroYScroll+screenHeight/2+width/4+y+width/4,width/2,WHITE);
         }
         if (-sceneZeroYScroll<screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4-screenHeight/30) DrawRectangleGradientV(0, screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
     }
