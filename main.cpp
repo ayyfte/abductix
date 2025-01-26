@@ -32,9 +32,10 @@ int sceneZeroYScroll = 0;
 Vector2 lastMousePosition = { 0.0f, 0.0f };
 
 Image imageCornerTopLeft, imageCornerTopRight, imageCornerBottomLeft, imageCornerBottomRight, imageWallUp, imageWallDown, imageWallLeft, imageWallRight, imagePlayer, imagePurpleBox, imagePurplePlaceholder, imageGreenBox, imageGreenPlaceholder, imageBlueBox, imageBluePlaceholder, imageRedBox, imageRedPlaceholder;
-Texture2D textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder;
+Texture2D textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder, imageButtonBack;
 
 void LoadTextures() {
+    imageButtonBack = LoadTexture("assets/button_back.png");
     UnloadImage(imageCornerTopLeft);
     UnloadImage(imageCornerTopRight);
     UnloadImage(imageCornerBottomLeft);
@@ -130,6 +131,10 @@ int newDropMapY(int positionX, int positionY) {
 }
 
 void InitLevel() {
+    attachedBoxIndex = -1;
+    nextLevel = false;
+    playerGoingDown = true;
+    
     if (level==maxLevel) level = 0;
     level+=1;
 
@@ -220,7 +225,7 @@ void update() {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
     if (SCENE==0) {
-    if (changeSCN==1) {InitLevel();SCENE=1;}
+    if (changeSCN==1) {InitLevel();SCENE=1;changeSCN=0;}
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += MouseY - lastMousePosition.y;
     if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
     if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
@@ -278,6 +283,7 @@ void update() {
         for (int j=0; j<placeholder.size(); ++j) {
             if (placeholder[j][0] == box[i][0] && placeholder[j][1] == box[i][1] && placeholderMap[j][2]==boxMap[i][2]) ++satisfiedPlaceholders;
         }
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && MouseX<screenWidth/4&&MouseY<screenWidth/4) SCENE = 0;
     }
     if (indexToLift!=-1) {
         tileMap[boxMap[indexToLift][1]][boxMap[indexToLift][0]] = 0;
@@ -302,6 +308,7 @@ void draw() {
         if (-sceneZeroYScroll<screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4-screenHeight/30) DrawRectangleGradientV(0, screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
     }
     else if (SCENE==1) {
+    DrawTextureEx(imageButtonBack, {screenWidth/16, screenWidth/8}, -45.0f, screenWidth/128, WHITE);
     for (nlohmann::json::size_type rowIndex = 0; rowIndex < tileMap.size(); ++rowIndex) {
         const auto& row = tileMap[rowIndex];
         for (nlohmann::json::size_type tileIndex = 0; tileIndex < row.size(); ++tileIndex) {
