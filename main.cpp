@@ -223,7 +223,7 @@ void update() {
     if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
     if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
     if (abs(sceneZeroYScroll-(screenHeight/60))<screenHeight/60) sceneZeroYScroll=0;
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0) changeSCN = 1;
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0 && !(-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) && !(sceneZeroYScroll>0)) changeSCN = 1;
     }
     if (SCENE==1) {
     FRAME+=1;
