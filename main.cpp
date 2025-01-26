@@ -215,15 +215,28 @@ int main(void) {
 }
 
 void update() {
+    int MouseX = GetMousePosition().x;
+    int MouseY = GetMousePosition().y;
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
     if (SCENE==0) {
-    if (changeSCN==1) {level=0;InitLevel();SCENE=1;}
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += GetMousePosition().y - lastMousePosition.y;
+    if (changeSCN==1) {InitLevel();SCENE=1;}
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += MouseY - lastMousePosition.y;
     if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
     if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
     if (abs(sceneZeroYScroll-(screenHeight/60))<screenHeight/60) sceneZeroYScroll=0;
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && GetMousePosition().y-lastMousePosition.y==0 && !(-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) && !(sceneZeroYScroll>0)) changeSCN=1;
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && MouseY-lastMousePosition.y==0 && !(-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) && !(sceneZeroYScroll>0)) {
+        int width = screenWidth/4;
+        for (int i = 0; i < maxLevel; i++) {
+            int x = (i % 3) * width + (width/4)*(i%3);
+            int y = (i / 3) * width + (width/4)*(i/3);
+            if (MouseX >= width/4+x && MouseX <= width/4+x+width && MouseY-sceneZeroYScroll > screenHeight/2+width/4+y && MouseY-sceneZeroYScroll < screenHeight/2+width/4+y+width) {
+                level=i;
+                changeSCN=1;
+                break;
+            }
+        }
+    }
     }
     if (SCENE==1) {
     FRAME+=1;
