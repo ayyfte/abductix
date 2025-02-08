@@ -9,10 +9,8 @@ using namespace std;
 #endif
 
 #ifdef __EMSCRIPTEN__
-   // Specific fixes for emscripten (e.g., casting integers to floats)
    #define CAST_TO_FLOAT(val) static_cast<float>(val)
 #else
-   // Default behavior for other compilers
    #define CAST_TO_FLOAT(val) (val)
 #endif
 
@@ -35,7 +33,6 @@ vector<vector<int>> placeholder, placeholderMap;
 int attachedBoxIndex = -1;
 int SCENE = 0;
 bool nextLevel = false;
-bool playerGoingDown = true;
 int sceneZeroYScroll = 0;
 Vector2 lastMousePosition = { 0.0f, 0.0f };
 
@@ -141,7 +138,6 @@ int newDropMapY(int positionX, int positionY) {
 void InitLevel() {
     attachedBoxIndex = -1;
     nextLevel = false;
-    playerGoingDown = true;
     
     if (level==maxLevel) level = 0;
     level+=1;
@@ -233,7 +229,7 @@ void update() {
     screenWidth = GetScreenWidth();
     screenHeight = GetScreenHeight();
     if (SCENE==0) {
-    if (changeSCN==1) {InitLevel();SCENE=1;changeSCN=0;}
+    if (changeSCN==1) {InitLevel();SCENE=1;changeSCN=0;FRAME=0;}
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) sceneZeroYScroll += MouseY - lastMousePosition.y;
     if (sceneZeroYScroll>0) sceneZeroYScroll-=(screenHeight/60);
     if (-sceneZeroYScroll>screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4) sceneZeroYScroll+=screenHeight/60;
@@ -253,9 +249,6 @@ void update() {
     }
     if (SCENE==1) {
     FRAME+=1;
-    playerY += (playerGoingDown) ? +tileSize/60:-tileSize/60;
-    if (playerY>=offsetY+playerMapY*tileSize+tileSize/12) playerGoingDown=false;
-    if (playerY<=offsetY+playerMapY*tileSize-tileSize/12) playerGoingDown=true;
     if (nextLevel) {InitLevel(); nextLevel=false;}
     bool inputCheck = true;
     bool dragging = false;
