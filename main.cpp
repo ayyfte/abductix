@@ -24,6 +24,7 @@ int level = 0;
 int changeSCN = 0;
 int satisfiedPlaceholders = 0;
 const int maxLevel = 10;
+bool completedLevels[maxLevel] = {false};
 int screenWidth, screenHeight, offsetX, offsetY, tileSize;
 int levelWidth, levelHeight;
 int FRAME = 0;
@@ -249,7 +250,7 @@ void update() {
     }
     if (SCENE==1) {
     FRAME+=1;
-    if (nextLevel) {InitLevel(); nextLevel=false;}
+    if (nextLevel) {completedLevels[level-1]=true; nextLevel=false; InitLevel();}
     bool inputCheck = true;
     bool dragging = false;
     if ((IsKeyPressed(KEY_RIGHT) || GetGestureDetected()==GESTURE_SWIPE_RIGHT) && playerMapX+1<levelWidth) {playerMapX++;dragging=true;}
@@ -299,12 +300,18 @@ void draw() {
     if (SCENE==0) {
         int width = screenWidth/4;
         DrawText("abductix",screenWidth/2-MeasureText("abductix",screenWidth/5)/2,sceneZeroYScroll+screenHeight/4,screenWidth/5,WHITE);
+        DrawText("by Ayyfte",screenWidth/2-MeasureText("by Ayyfte",screenWidth/10)/2,sceneZeroYScroll+screenHeight/4+screenWidth/5,screenWidth/10,WHITE);
         for (int i = 0; i < maxLevel; i++) {
             int x = (i % 3) * width + (width/4)*(i%3);
             int y = (i / 3) * width + (width/4)*(i/3);
 			Rectangle boxForLevel = {CAST_TO_FLOAT(width / 4 + x), CAST_TO_FLOAT(sceneZeroYScroll + screenHeight / 2 + width / 4 + y), CAST_TO_FLOAT(width), CAST_TO_FLOAT(width)};
-            DrawRectangleLinesEx(boxForLevel, width/20, WHITE);
-            DrawText(to_string(i+1).c_str(),width/4+x+width/2-MeasureText(to_string(i+1).c_str(),width/2)/2,sceneZeroYScroll+screenHeight/2+width/4+y+width/4,width/2,WHITE);
+            if (completedLevels[i]) {
+                DrawRectangleRec(boxForLevel, WHITE);
+                DrawText(to_string(i+1).c_str(),width/4+x+width/2-MeasureText(to_string(i+1).c_str(),width/2)/2,sceneZeroYScroll+screenHeight/2+width/4+y+width/4,width/2,ColorFromHSV(302, .54, .52));
+            } else {
+                DrawRectangleLinesEx(boxForLevel, width/20, WHITE);
+                DrawText(to_string(i+1).c_str(),width/4+x+width/2-MeasureText(to_string(i+1).c_str(),width/2)/2,sceneZeroYScroll+screenHeight/2+width/4+y+width/4,width/2,WHITE);
+            }
         }
         if (-sceneZeroYScroll<screenWidth/16+((maxLevel-9)/3)*screenWidth/4+(screenWidth/16)*((maxLevel-9)/3)+screenWidth/4-screenHeight/30) DrawRectangleGradientV(0, screenHeight-screenHeight/8, screenWidth, screenHeight/8, (Color){255, 255, 255, 0}, (Color){255, 255, 255, 128});
     }
