@@ -200,10 +200,10 @@ int main(void) {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
     #if defined(PLATFORM_WEB)
-    InitWindow(360, 640, "abductix");
+    InitWindow(300, 640, "abductix");
     emscripten_set_main_loop(gameLoop, 30, 1);
     #else
-    InitWindow(360, 640, "abductix");
+    InitWindow(300, 640, "abductix");
     //InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
     //ToggleFullscreen();
     SetTargetFPS(30);
