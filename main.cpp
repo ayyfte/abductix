@@ -38,8 +38,8 @@ bool nextLevel = false;
 int sceneZeroYScroll = 0;
 Vector2 lastMousePosition = { 0.0f, 0.0f };
 
-Image imageMiddle, imageCornerTopLeft, imageCornerTopRight, imageCornerBottomLeft, imageCornerBottomRight, imageWallUp, imageWallDown, imageWallLeft, imageWallRight, imagePlayer, imagePurpleBox, imagePurplePlaceholder, imageGreenBox, imageGreenPlaceholder, imageBlueBox, imageBluePlaceholder, imageRedBox, imageRedPlaceholder, imageRedBlocker, imageRedBlockerSwitch;
-Texture2D textureMiddle, textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder, imageButtonBack, textureRedBlocker, textureRedBlockerSwitch;
+Image imageMiddle, imageCornerTopLeft, imageCornerTopRight, imageCornerBottomLeft, imageCornerBottomRight, imageWallUp, imageWallDown, imageWallLeft, imageWallRight, imagePlayer, imagePurpleBox, imagePurplePlaceholder, imageGreenBox, imageGreenPlaceholder, imageBlueBox, imageBluePlaceholder, imageRedBox, imageRedPlaceholder, imagePurpleBlocker, imagePurpleBlockerSwitch, imageGreenBlocker, imageGreenBlockerSwitch, imageBlueBlocker, imageBlueBlockerSwitch, imageRedBlocker, imageRedBlockerSwitch;
+Texture2D textureMiddle, textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder, imageButtonBack, texturePurpleBlocker, texturePurpleBlockerSwitch, textureGreenBlocker, textureGreenBlockerSwitch, textureBlueBlocker, textureBlueBlockerSwitch, textureRedBlocker, textureRedBlockerSwitch;
 
 void LoadTextures() {
     imageButtonBack = LoadTexture("assets/button_back.png");
@@ -61,6 +61,12 @@ void LoadTextures() {
     UnloadImage(imageRedBox);
     UnloadImage(imageRedPlaceholder);
     UnloadImage(imageMiddle);
+    UnloadImage(imagePurpleBlockerSwitch);
+    UnloadImage(imagePurpleBlocker);
+    UnloadImage(imageGreenBlockerSwitch);
+    UnloadImage(imageGreenBlocker);
+    UnloadImage(imageBlueBlockerSwitch);
+    UnloadImage(imageBlueBlocker);
     UnloadImage(imageRedBlockerSwitch);
     UnloadImage(imageRedBlocker);
     imageMiddle = LoadImage("assets/middle.png");
@@ -81,6 +87,12 @@ void LoadTextures() {
     imageBluePlaceholder = LoadImage("assets/blue_placeholder.png");
     imageRedBox = LoadImage("assets/red_box.png");
     imageRedPlaceholder = LoadImage("assets/red_placeholder.png");
+    imagePurpleBlocker = LoadImage("assets/purple_blocker.png");
+    imagePurpleBlockerSwitch = LoadImage("assets/purple_blocker_switch.png");
+    imageGreenBlocker = LoadImage("assets/green_blocker.png");
+    imageGreenBlockerSwitch = LoadImage("assets/green_blocker_switch.png");
+    imageBlueBlocker = LoadImage("assets/blue_blocker.png");
+    imageBlueBlockerSwitch = LoadImage("assets/blue_blocker_switch.png");
     imageRedBlocker = LoadImage("assets/red_blocker.png");
     imageRedBlockerSwitch = LoadImage("assets/red_blocker_switch.png");
     ImageResizeNN(&imageMiddle, tileSize, tileSize);
@@ -101,6 +113,12 @@ void LoadTextures() {
     ImageResizeNN(&imageBluePlaceholder, tileSize, tileSize);
     ImageResizeNN(&imageRedBox, tileSize, tileSize);
     ImageResizeNN(&imageRedPlaceholder, tileSize, tileSize);
+    ImageResizeNN(&imagePurpleBlocker, tileSize, tileSize);
+    ImageResizeNN(&imagePurpleBlockerSwitch, tileSize, tileSize);
+    ImageResizeNN(&imageGreenBlocker, tileSize, tileSize);
+    ImageResizeNN(&imageGreenBlockerSwitch, tileSize, tileSize);
+    ImageResizeNN(&imageBlueBlocker, tileSize, tileSize);
+    ImageResizeNN(&imageBlueBlockerSwitch, tileSize, tileSize);
     ImageResizeNN(&imageRedBlocker, tileSize, tileSize);
     ImageResizeNN(&imageRedBlockerSwitch, tileSize, tileSize);
     UnloadTexture(textureMiddle);
@@ -121,6 +139,12 @@ void LoadTextures() {
     UnloadTexture(textureBluePlaceholder);
     UnloadTexture(textureRedBox);
     UnloadTexture(textureRedPlaceholder);
+    UnloadTexture(texturePurpleBlocker);
+    UnloadTexture(texturePurpleBlockerSwitch);
+    UnloadTexture(textureGreenBlocker);
+    UnloadTexture(textureGreenBlockerSwitch);
+    UnloadTexture(textureBlueBlocker);
+    UnloadTexture(textureBlueBlockerSwitch);
     UnloadTexture(textureRedBlocker);
     UnloadTexture(textureRedBlockerSwitch);
     textureMiddle = LoadTextureFromImage(imageMiddle);
@@ -141,6 +165,12 @@ void LoadTextures() {
     textureBluePlaceholder = LoadTextureFromImage(imageBluePlaceholder);
     textureRedBox = LoadTextureFromImage(imageRedBox);
     textureRedPlaceholder = LoadTextureFromImage(imageRedPlaceholder);
+    texturePurpleBlocker = LoadTextureFromImage(imagePurpleBlocker);
+    texturePurpleBlockerSwitch = LoadTextureFromImage(imagePurpleBlockerSwitch);
+    textureGreenBlocker = LoadTextureFromImage(imageGreenBlocker);
+    textureGreenBlockerSwitch = LoadTextureFromImage(imageGreenBlockerSwitch);
+    textureBlueBlocker = LoadTextureFromImage(imageBlueBlocker);
+    textureBlueBlockerSwitch = LoadTextureFromImage(imageBlueBlockerSwitch);
     textureRedBlocker = LoadTextureFromImage(imageRedBlocker);
     textureRedBlockerSwitch = LoadTextureFromImage(imageRedBlockerSwitch);
 }
@@ -381,9 +411,9 @@ void draw() {
 
         for (int i = 0; i < blockerMap.size(); ++i) {
             switch (blockerMap[i][4]) {
-                case 0: DrawTexture(textureRedBlockerSwitch, offsetX + tileSize*blockerMap[i][2], offsetY + tileSize*blockerMap[i][3], WHITE); if (blockerMap[i][5]==1) DrawTexture(textureRedBlocker, offsetX + tileSize*blockerMap[i][0], offsetY + tileSize*blockerMap[i][1], WHITE); break;
-                case 1: DrawTexture(textureRedBlockerSwitch, offsetX + tileSize*blockerMap[i][2], offsetY + tileSize*blockerMap[i][3], WHITE); if (blockerMap[i][5]==1) DrawTexture(textureRedBlocker, offsetX + tileSize*blockerMap[i][0], offsetY + tileSize*blockerMap[i][1], WHITE); break;
-                case 2: DrawTexture(textureRedBlockerSwitch, offsetX + tileSize*blockerMap[i][2], offsetY + tileSize*blockerMap[i][3], WHITE); if (blockerMap[i][5]==1) DrawTexture(textureRedBlocker, offsetX + tileSize*blockerMap[i][0], offsetY + tileSize*blockerMap[i][1], WHITE); break;
+                case 0: DrawTexture(texturePurpleBlockerSwitch, offsetX + tileSize*blockerMap[i][2], offsetY + tileSize*blockerMap[i][3], WHITE); if (blockerMap[i][5]==1) DrawTexture(texturePurpleBlocker, offsetX + tileSize*blockerMap[i][0], offsetY + tileSize*blockerMap[i][1], WHITE); break;
+                case 1: DrawTexture(textureGreenBlockerSwitch, offsetX + tileSize*blockerMap[i][2], offsetY + tileSize*blockerMap[i][3], WHITE); if (blockerMap[i][5]==1) DrawTexture(textureGreenBlocker, offsetX + tileSize*blockerMap[i][0], offsetY + tileSize*blockerMap[i][1], WHITE); break;
+                case 2: DrawTexture(textureBlueBlockerSwitch, offsetX + tileSize*blockerMap[i][2], offsetY + tileSize*blockerMap[i][3], WHITE); if (blockerMap[i][5]==1) DrawTexture(textureBlueBlocker, offsetX + tileSize*blockerMap[i][0], offsetY + tileSize*blockerMap[i][1], WHITE); break;
                 case 3: DrawTexture(textureRedBlockerSwitch, offsetX + tileSize*blockerMap[i][2], offsetY + tileSize*blockerMap[i][3], WHITE); if (blockerMap[i][5]==1) DrawTexture(textureRedBlocker, offsetX + tileSize*blockerMap[i][0], offsetY + tileSize*blockerMap[i][1], WHITE); break;
             }
         }
