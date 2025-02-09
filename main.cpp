@@ -138,7 +138,6 @@ int newDropMapY(int positionX, int positionY) {
 
 void InitLevel() {
     attachedBoxIndex = -1;
-    nextLevel = false;
     
     if (level==maxLevel) level = 0;
     level+=1;
@@ -285,13 +284,13 @@ void update() {
         for (int j=0; j<placeholder.size(); ++j) {
             if (placeholder[j][0] == box[i][0] && placeholder[j][1] == box[i][1] && placeholderMap[j][2]==boxMap[i][2]) ++satisfiedPlaceholders;
         }
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && MouseX<screenWidth/4&&MouseY<screenWidth/4) SCENE = 0;
     }
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && MouseX<screenWidth/4&&MouseY<screenWidth/4) SCENE = 0;
     if (indexToLift!=-1) {
         tileMap[boxMap[indexToLift][1]][boxMap[indexToLift][0]] = 0;
         boxMap[indexToLift][1] = playerMapY+1;
     }
-    if (satisfiedPlaceholders==placeholderMap.size()) nextLevel = true;
+    if (satisfiedPlaceholders==placeholderMap.size() || IsKeyPressed(KEY_SPACE)) nextLevel = true;
     }
     lastMousePosition = GetMousePosition();
 }
