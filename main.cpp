@@ -23,7 +23,7 @@ vector<vector<int>> tileMap;
 int level = 0;
 int changeSCN = 0;
 int satisfiedPlaceholders = 0;
-const int maxLevel = 11;
+const int maxLevel = 12;
 bool completedLevels[maxLevel] = {false};
 int screenWidth, screenHeight, offsetX, offsetY, tileSize;
 int levelWidth, levelHeight;
