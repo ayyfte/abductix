@@ -1,36 +1,3 @@
-/*
-HOW TO:
-
-"width", "height" are self-explanatory.
-"playerX" and "playerY" are the staring position of the player in map (always 0,0)
-"box" refers to the movable blocks with the format [x,y,colour] where colours are:
-    0: purple,
-    1: green,
-    2: blue,
-    3: red
-"holder" refers to the respective holders with the format [x,y,colour] where colours are:
-    0: purple,
-    1: green,
-    2: blue,
-    3: red
-"blocker" is the laser-like toggle-able switches with the format [laserX, laserY, switchX, switchY, colour] where colours are:
-    0: purple,
-    1: green,
-    2: blue,
-    3: red
-"tilemap" is a 2d array that must be "width" units wide and "height" units high and the respective tiles are:
-    0: blank
-    1: top-left facing wall
-    2: top-right facing wall
-    3: bottom-left facing wall
-    4: bottom-right facing wall
-    5: top facing wall
-    6: bottom facing wall
-    7: left facing wall
-    8: right facing wall
-    9: inner wall
-*/
-
 {
   "1": {
     "width": 4,
