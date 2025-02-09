@@ -23,7 +23,7 @@ vector<vector<int>> tileMap;
 int level = 0;
 int changeSCN = 0;
 int satisfiedPlaceholders = 0;
-const int maxLevel = 10;
+const int maxLevel = 11;
 bool completedLevels[maxLevel] = {false};
 int screenWidth, screenHeight, offsetX, offsetY, tileSize;
 int levelWidth, levelHeight;
@@ -37,8 +37,8 @@ bool nextLevel = false;
 int sceneZeroYScroll = 0;
 Vector2 lastMousePosition = { 0.0f, 0.0f };
 
-Image imageCornerTopLeft, imageCornerTopRight, imageCornerBottomLeft, imageCornerBottomRight, imageWallUp, imageWallDown, imageWallLeft, imageWallRight, imagePlayer, imagePurpleBox, imagePurplePlaceholder, imageGreenBox, imageGreenPlaceholder, imageBlueBox, imageBluePlaceholder, imageRedBox, imageRedPlaceholder;
-Texture2D textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder, imageButtonBack;
+Image imageMiddle, imageCornerTopLeft, imageCornerTopRight, imageCornerBottomLeft, imageCornerBottomRight, imageWallUp, imageWallDown, imageWallLeft, imageWallRight, imagePlayer, imagePurpleBox, imagePurplePlaceholder, imageGreenBox, imageGreenPlaceholder, imageBlueBox, imageBluePlaceholder, imageRedBox, imageRedPlaceholder;
+Texture2D textureMiddle, textureCornerTopLeft, textureCornerTopRight, textureCornerBottomLeft, textureCornerBottomRight, textureWallUp, textureWallDown, textureWallLeft, textureWallRight, texturePlayer, texturePurpleBox, texturePurplePlaceholder, textureGreenBox, textureGreenPlaceholder, textureBlueBox, textureBluePlaceholder, textureRedBox, textureRedPlaceholder, imageButtonBack;
 
 void LoadTextures() {
     imageButtonBack = LoadTexture("assets/button_back.png");
@@ -59,6 +59,8 @@ void LoadTextures() {
     UnloadImage(imageBluePlaceholder);
     UnloadImage(imageRedBox);
     UnloadImage(imageRedPlaceholder);
+    UnloadImage(imageMiddle);
+    imageMiddle = LoadImage("assets/middle.png");
     imageCornerTopLeft = LoadImage("assets/corner_topleft.png");
     imageCornerTopRight = LoadImage("assets/corner_topright.png");
     imageCornerBottomLeft = LoadImage("assets/corner_bottomleft.png");
@@ -76,6 +78,7 @@ void LoadTextures() {
     imageBluePlaceholder = LoadImage("assets/blue_placeholder.png");
     imageRedBox = LoadImage("assets/red_box.png");
     imageRedPlaceholder = LoadImage("assets/red_placeholder.png");
+    ImageResizeNN(&imageMiddle, tileSize, tileSize);
     ImageResizeNN(&imageCornerTopLeft, tileSize, tileSize);
     ImageResizeNN(&imageCornerTopRight, tileSize, tileSize);
     ImageResizeNN(&imageCornerBottomLeft, tileSize, tileSize);
@@ -93,6 +96,7 @@ void LoadTextures() {
     ImageResizeNN(&imageBluePlaceholder, tileSize, tileSize);
     ImageResizeNN(&imageRedBox, tileSize, tileSize);
     ImageResizeNN(&imageRedPlaceholder, tileSize, tileSize);
+    UnloadTexture(textureMiddle);
     UnloadTexture(textureCornerTopLeft);
     UnloadTexture(textureCornerTopRight);
     UnloadTexture(textureCornerBottomLeft);
@@ -110,6 +114,7 @@ void LoadTextures() {
     UnloadTexture(textureBluePlaceholder);
     UnloadTexture(textureRedBox);
     UnloadTexture(textureRedPlaceholder);
+    textureMiddle = LoadTextureFromImage(imageMiddle);
     textureCornerTopLeft = LoadTextureFromImage(imageCornerTopLeft);
     textureCornerTopRight = LoadTextureFromImage(imageCornerTopRight);
     textureCornerBottomLeft = LoadTextureFromImage(imageCornerBottomLeft);
@@ -332,6 +337,7 @@ void draw() {
                 case 6: DrawTexture(textureWallDown, x, y, WHITE); break;
                 case 7: DrawTexture(textureWallLeft, x, y, WHITE); break;
                 case 8: DrawTexture(textureWallRight, x, y, WHITE); break;
+                case 9: DrawTexture(textureMiddle, x, y, WHITE); break;
                 default: break;
             }
         }
